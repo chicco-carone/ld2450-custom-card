@@ -1,0 +1,36 @@
+substitutions:
+  device_name: ld2450-office
+  friendly_name: LD2450 Office
+  ld2450_rx_pin: GPIO16
+  ld2450_tx_pin: GPIO17
+  ld2450_zone_1_name: Left
+  ld2450_zone_2_name: Center
+  ld2450_zone_3_name: Right
+
+esphome:
+  name: ${device_name}
+  friendly_name: ${friendly_name}
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+
+logger:
+  baud_rate: 0
+
+api:
+
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: CHANGE_ME
+  password: CHANGE_ME
+  ap:
+    ssid: ${friendly_name} Fallback
+
+captive_portal:
+
+packages:
+  ld2450_zone_card: !include ../packages/ld2450-zone-card.yaml

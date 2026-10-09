@@ -1,0 +1,12 @@
+# Add this package block to an existing ESP32 configuration. Override any
+# substitutions before the package when your UART pins or zone defaults differ.
+substitutions:
+  ld2450_rx_pin: GPIO16
+  ld2450_tx_pin: GPIO17
+  ld2450_target_update_interval: 500ms
+  ld2450_zone_1_name: Zone 1
+  ld2450_zone_2_name: Zone 2
+  ld2450_zone_3_name: Zone 3
+
+packages:
+  ld2450_zone_card: !include ../packages/ld2450-zone-card.yaml

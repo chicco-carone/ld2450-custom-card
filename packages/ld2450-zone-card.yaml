@@ -1,0 +1,180 @@
+substitutions:
+  ld2450_rx_pin: GPIO16
+  ld2450_tx_pin: GPIO17
+  ld2450_target_update_interval: 500ms
+  ld2450_flip_x_axis: "false"
+  ld2450_fast_off_detection: "true"
+  ld2450_zone_1_name: Zone 1
+  ld2450_zone_2_name: Zone 2
+  ld2450_zone_3_name: Zone 3
+  ld2450_zone_1_margin: 25cm
+  ld2450_zone_2_margin: 25cm
+  ld2450_zone_3_margin: 25cm
+  ld2450_zone_1_timeout: 5s
+  ld2450_zone_2_timeout: 5s
+  ld2450_zone_3_timeout: 5s
+
+external_components:
+  - source: github://flo-rian/ESPHome-HLK-LD2450@pr/esphome-2026-compat
+
+uart:
+  id: ld2450_uart
+  rx_pin: ${ld2450_rx_pin}
+  tx_pin: ${ld2450_tx_pin}
+  baud_rate: 256000
+  parity: NONE
+  stop_bits: 1
+  data_bits: 8
+  rx_buffer_size: 1024
+
+LD2450:
+  id: ld2450_radar
+  uart_id: ld2450_uart
+  flip_x_axis: ${ld2450_flip_x_axis}
+  fast_off_detection: ${ld2450_fast_off_detection}
+  occupancy:
+    name: LD2450 Occupancy
+  target_count:
+    name: LD2450 Target Count
+  max_detection_distance:
+    name: LD2450 Maximum Distance
+    initial_value: 6m
+  min_detection_tilt_angle:
+    name: LD2450 Minimum Angle
+    initial_value: -90°
+  max_detection_tilt_angle:
+    name: LD2450 Maximum Angle
+    initial_value: 90°
+  restart_button:
+    name: LD2450 Restart Sensor
+  factory_reset_button:
+    name: LD2450 Factory Reset Sensor
+  tracking_mode_switch:
+    name: LD2450 Multiple Target Tracking
+  bluetooth_switch:
+    name: LD2450 Bluetooth
+  baud_rate_select:
+    name: LD2450 Baud Rate
+  targets:
+    - target:
+        name: LD2450 Target 1
+        x_position: { id: ld2450_target_1_x, update_interval: "${ld2450_target_update_interval}" }
+        y_position: { id: ld2450_target_1_y, update_interval: "${ld2450_target_update_interval}" }
+        speed: { id: ld2450_target_1_speed, update_interval: "${ld2450_target_update_interval}" }
+        distance: { id: ld2450_target_1_distance, update_interval: "${ld2450_target_update_interval}" }
+        angle: { id: ld2450_target_1_angle, update_interval: "${ld2450_target_update_interval}" }
+        distance_resolution: { id: ld2450_target_1_resolution, update_interval: "${ld2450_target_update_interval}" }
+    - target:
+        name: LD2450 Target 2
+        x_position: { id: ld2450_target_2_x, update_interval: "${ld2450_target_update_interval}" }
+        y_position: { id: ld2450_target_2_y, update_interval: "${ld2450_target_update_interval}" }
+        speed: { id: ld2450_target_2_speed, update_interval: "${ld2450_target_update_interval}" }
+        distance: { id: ld2450_target_2_distance, update_interval: "${ld2450_target_update_interval}" }
+        angle: { id: ld2450_target_2_angle, update_interval: "${ld2450_target_update_interval}" }
+        distance_resolution: { id: ld2450_target_2_resolution, update_interval: "${ld2450_target_update_interval}" }
+    - target:
+        name: LD2450 Target 3
+        x_position: { id: ld2450_target_3_x, update_interval: "${ld2450_target_update_interval}" }
+        y_position: { id: ld2450_target_3_y, update_interval: "${ld2450_target_update_interval}" }
+        speed: { id: ld2450_target_3_speed, update_interval: "${ld2450_target_update_interval}" }
+        distance: { id: ld2450_target_3_distance, update_interval: "${ld2450_target_update_interval}" }
+        angle: { id: ld2450_target_3_angle, update_interval: "${ld2450_target_update_interval}" }
+        distance_resolution: { id: ld2450_target_3_resolution, update_interval: "${ld2450_target_update_interval}" }
+  zones:
+    - zone:
+        id: ld2450_zone_1
+        name: ${ld2450_zone_1_name}
+        margin: ${ld2450_zone_1_margin}
+        target_timeout: ${ld2450_zone_1_timeout}
+        polygon: { lambda: !lambda "return {};", update_interval: 0s }
+        occupancy: { id: ld2450_zone_1_occupancy, name: LD2450 Zone 1 Occupancy }
+        target_count: { id: ld2450_zone_1_target_count, name: LD2450 Zone 1 Target Count }
+    - zone:
+        id: ld2450_zone_2
+        name: ${ld2450_zone_2_name}
+        margin: ${ld2450_zone_2_margin}
+        target_timeout: ${ld2450_zone_2_timeout}
+        polygon: { lambda: !lambda "return {};", update_interval: 0s }
+        occupancy: { id: ld2450_zone_2_occupancy, name: LD2450 Zone 2 Occupancy }
+        target_count: { id: ld2450_zone_2_target_count, name: LD2450 Zone 2 Target Count }
+    - zone:
+        id: ld2450_zone_3
+        name: ${ld2450_zone_3_name}
+        margin: ${ld2450_zone_3_margin}
+        target_timeout: ${ld2450_zone_3_timeout}
+        polygon: { lambda: !lambda "return {};", update_interval: 0s }
+        occupancy: { id: ld2450_zone_3_occupancy, name: LD2450 Zone 3 Occupancy }
+        target_count: { id: ld2450_zone_3_target_count, name: LD2450 Zone 3 Target Count }
+
+number:
+  - { platform: template, id: z1_p1_x, name: LD2450 Zone 1 Point 1 X, min_value: -6, max_value: 6, step: 0.1, initial_value: -6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p1_y, name: LD2450 Zone 1 Point 1 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 0, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p2_x, name: LD2450 Zone 1 Point 2 X, min_value: -6, max_value: 6, step: 0.1, initial_value: -6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p2_y, name: LD2450 Zone 1 Point 2 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p3_x, name: LD2450 Zone 1 Point 3 X, min_value: -6, max_value: 6, step: 0.1, initial_value: -2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p3_y, name: LD2450 Zone 1 Point 3 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p4_x, name: LD2450 Zone 1 Point 4 X, min_value: -6, max_value: 6, step: 0.1, initial_value: -2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z1_p4_y, name: LD2450 Zone 1 Point 4 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 0, restore_value: true, optimistic: true, unit_of_measurement: m }
+
+  - { platform: template, id: z2_p1_x, name: LD2450 Zone 2 Point 1 X, min_value: -6, max_value: 6, step: 0.1, initial_value: -2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p1_y, name: LD2450 Zone 2 Point 1 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 0, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p2_x, name: LD2450 Zone 2 Point 2 X, min_value: -6, max_value: 6, step: 0.1, initial_value: -2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p2_y, name: LD2450 Zone 2 Point 2 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p3_x, name: LD2450 Zone 2 Point 3 X, min_value: -6, max_value: 6, step: 0.1, initial_value: 2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p3_y, name: LD2450 Zone 2 Point 3 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p4_x, name: LD2450 Zone 2 Point 4 X, min_value: -6, max_value: 6, step: 0.1, initial_value: 2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z2_p4_y, name: LD2450 Zone 2 Point 4 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 0, restore_value: true, optimistic: true, unit_of_measurement: m }
+
+  - { platform: template, id: z3_p1_x, name: LD2450 Zone 3 Point 1 X, min_value: -6, max_value: 6, step: 0.1, initial_value: 2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p1_y, name: LD2450 Zone 3 Point 1 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 0, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p2_x, name: LD2450 Zone 3 Point 2 X, min_value: -6, max_value: 6, step: 0.1, initial_value: 2, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p2_y, name: LD2450 Zone 3 Point 2 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p3_x, name: LD2450 Zone 3 Point 3 X, min_value: -6, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p3_y, name: LD2450 Zone 3 Point 3 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p4_x, name: LD2450 Zone 3 Point 4 X, min_value: -6, max_value: 6, step: 0.1, initial_value: 6, restore_value: true, optimistic: true, unit_of_measurement: m }
+  - { platform: template, id: z3_p4_y, name: LD2450 Zone 3 Point 4 Y, min_value: 0, max_value: 6, step: 0.1, initial_value: 0, restore_value: true, optimistic: true, unit_of_measurement: m }
+
+script:
+  - id: apply_ld2450_zone_1
+    then:
+      - LD2450.zone.update_polygon:
+          id: ld2450_zone_1
+          polygon: !lambda |-
+            return {ld2450::Point(id(z1_p1_x).state*1000, id(z1_p1_y).state*1000), ld2450::Point(id(z1_p2_x).state*1000, id(z1_p2_y).state*1000), ld2450::Point(id(z1_p3_x).state*1000, id(z1_p3_y).state*1000), ld2450::Point(id(z1_p4_x).state*1000, id(z1_p4_y).state*1000)};
+  - id: apply_ld2450_zone_2
+    then:
+      - LD2450.zone.update_polygon:
+          id: ld2450_zone_2
+          polygon: !lambda |-
+            return {ld2450::Point(id(z2_p1_x).state*1000, id(z2_p1_y).state*1000), ld2450::Point(id(z2_p2_x).state*1000, id(z2_p2_y).state*1000), ld2450::Point(id(z2_p3_x).state*1000, id(z2_p3_y).state*1000), ld2450::Point(id(z2_p4_x).state*1000, id(z2_p4_y).state*1000)};
+  - id: apply_ld2450_zone_3
+    then:
+      - LD2450.zone.update_polygon:
+          id: ld2450_zone_3
+          polygon: !lambda |-
+            return {ld2450::Point(id(z3_p1_x).state*1000, id(z3_p1_y).state*1000), ld2450::Point(id(z3_p2_x).state*1000, id(z3_p2_y).state*1000), ld2450::Point(id(z3_p3_x).state*1000, id(z3_p3_y).state*1000), ld2450::Point(id(z3_p4_x).state*1000, id(z3_p4_y).state*1000)};
+
+button:
+  - platform: template
+    id: apply_ld2450_zone_1_button
+    name: LD2450 Zone 1 Apply
+    entity_category: config
+    on_press: { then: [ { script.execute: apply_ld2450_zone_1 } ] }
+  - platform: template
+    id: apply_ld2450_zone_2_button
+    name: LD2450 Zone 2 Apply
+    entity_category: config
+    on_press: { then: [ { script.execute: apply_ld2450_zone_2 } ] }
+  - platform: template
+    id: apply_ld2450_zone_3_button
+    name: LD2450 Zone 3 Apply
+    entity_category: config
+    on_press: { then: [ { script.execute: apply_ld2450_zone_3 } ] }
+
+esphome:
+  on_boot:
+    priority: -100
+    then:
+      - script.execute: apply_ld2450_zone_1
+      - script.execute: apply_ld2450_zone_2
+      - script.execute: apply_ld2450_zone_3

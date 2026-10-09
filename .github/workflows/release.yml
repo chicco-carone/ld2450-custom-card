@@ -1,0 +1,36 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: "1.4.2"
+      - uses: astral-sh/setup-uv@v6
+      - name: Check release version
+        run: |
+          VERSION=$(bun -p 'require("./package.json").version')
+          test "$GITHUB_REF_NAME" = "v$VERSION"
+      - run: bun install --frozen-lockfile
+      - run: bun run check
+      - run: bun test
+      - run: bun run build
+      - run: git diff --exit-code -- dist/ld2450-custom-card.js
+      - run: uv run --frozen esphome config examples/ld2450-complete.yaml
+      - name: Publish release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release create "$GITHUB_REF_NAME" dist/ld2450-custom-card.js --verify-tag --title "$GITHUB_REF_NAME" --generate-notes

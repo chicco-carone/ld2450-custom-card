@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LD2450 Zone Card Preview</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --primary-color: #087ea4;
+        --primary-text-color: #172033;
+        --secondary-text-color: #667085;
+        --primary-background-color: #f5f7fa;
+        --secondary-background-color: #edf1f5;
+        --card-background-color: #fff;
+        --ha-card-background: #fff;
+        --divider-color: #d8dee7;
+        --error-color: #dc2626;
+        font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+        background: #e9eef3;
+      }
+      body { margin: 0; padding: 32px 16px; }
+      main { width: min(1080px, 100%); margin: auto; }
+      .preview-title { margin: 0 0 16px; color: #475467; font-size: 12px; letter-spacing: .12em; text-transform: uppercase; }
+      ha-card { display: block; border-radius: 16px; box-shadow: 0 8px 28px rgb(15 23 42 / 10%); }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --primary-text-color: #edf2f7;
+          --secondary-text-color: #98a2b3;
+          --primary-background-color: #111827;
+          --secondary-background-color: #1d2736;
+          --card-background-color: #18212f;
+          --ha-card-background: #18212f;
+          --divider-color: #344054;
+          background: #0d1420;
+        }
+        .preview-title { color: #98a2b3; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="preview-title">Development preview · simulated ESPHome device</p>
+      <ld2450-zone-card id="preview"></ld2450-zone-card>
+    </main>
+    <script type="module" src="/dev/preview.ts"></script>
+  </body>
+</html>

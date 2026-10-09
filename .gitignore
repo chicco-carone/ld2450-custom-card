@@ -1,0 +1,9 @@
+node_modules/
+dist/*
+!dist/ld2450-custom-card.js
+.venv/
+.esphome/
+*.pyc
+secrets.yaml
+.env
+.env.*
